@@ -1,4 +1,5 @@
 import os
+import traceback
 from time import time
 from shutil import rmtree
 from git import Repo
@@ -97,7 +98,8 @@ class Repository(MongoDict):
                 self.update_value('status', 'active')
         except Exception as e:
             self['status'] = 'error'
-            self['error_msg'] = 'Could not update repository.\n{}: {}'.format(type(e).__name__, e)
+            tb = traceback.format_exc()
+            self['error_msg'] = 'Could not update repository.\n{}:{}'.format(type(e).__name__, tb)
             self.save()
 
         updates = Internals.get(name="updates")
